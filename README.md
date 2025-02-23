@@ -1,5 +1,6 @@
 # Trustify-ui
 
+-test
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trustification/trustify-ui/pulls)
 
 Trustify UI Component
