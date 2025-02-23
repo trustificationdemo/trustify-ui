@@ -2,6 +2,7 @@
 
 - test1
 - test2
+- test3
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trustification/trustify-ui/pulls)
 
