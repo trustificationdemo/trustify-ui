@@ -72,3 +72,5 @@ Open browser at <http://localhost:3000>
 > When using the crate it is expected to build the UI always in Prod mode
 
 ## A Heading
+
+## Another heading
