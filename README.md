@@ -52,7 +52,7 @@ npm run start:dev
 > happens the very first time we install dependencies in a clean environment, subsequent commands `npm run start:dev`
 > should not give that error. (bug under investigation)
 
-Open browser at <http://localhost:3000>
+Open browser here <http://localhost:3000>
 
 ## Environment variables
 
