@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
 
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
@@ -34,7 +34,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     },
     isPaginationEnabled: true,
     isSortEnabled: true,
-    sortableColumns: [],
+    sortableColumns: ["name"],
     isFilterEnabled: true,
     filterCategories: [
       {
@@ -54,8 +54,10 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     purl,
     getHubRequestParams({
       ...tableControlState,
-      hubSortFieldKeys: {},
-    })
+      hubSortFieldKeys: {
+        name: "name",
+      },
+    }),
   );
 
   const tableControls = useTableControlProps({
@@ -75,7 +77,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
     currentPageItems,
     propHelpers: {
       toolbarProps,
-      filterToolbarProps,
       paginationToolbarItemProps,
       paginationProps,
       tableProps,
@@ -119,7 +120,11 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
             return (
               <Tbody key={item.id}>
                 <Tr {...getTrProps({ item })}>
-                  <Td width={35} {...getTdProps({ columnKey: "name" })}>
+                  <Td
+                    width={35}
+                    modifier="breakWord"
+                    {...getTdProps({ columnKey: "name" })}
+                  >
                     <Link to={`/sboms/${item.id}`}>{item.name}</Link>
                   </Td>
                   <Td
@@ -134,7 +139,7 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
                     modifier="truncate"
                     {...getTdProps({ columnKey: "supplier" })}
                   >
-                    {item.authors.join(", ")}
+                    {item.suppliers.join(", ")}
                   </Td>
                 </Tr>
               </Tbody>
@@ -145,7 +150,6 @@ export const SbomsByPackage: React.FC<SbomsByPackageProps> = ({ purl }) => {
       <SimplePagination
         idPrefix="sbom-table"
         isTop={false}
-        isCompact
         paginationProps={paginationProps}
       />
     </>

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import {
   PageSection,
@@ -26,7 +26,7 @@ export const SbomList: React.FC = () => {
           }}
         >
           <SbomSearchProvider>
-            <SbomToolbar />
+            <SbomToolbar showFilters />
             <SbomTable />
           </SbomSearchProvider>
         </div>

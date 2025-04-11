@@ -1,23 +1,23 @@
-import React, { useReducer, useState } from "react";
+import type React from "react";
+import { useReducer, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
   Brand,
-  Button,
-  ButtonVariant,
   Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
+  Icon,
   Masthead,
   MastheadBrand,
   MastheadContent,
   MastheadMain,
   MastheadToggle,
   MenuToggle,
-  MenuToggleElement,
+  type MenuToggleElement,
   PageToggleButton,
   Title,
   Toolbar,
@@ -29,6 +29,7 @@ import {
 import EllipsisVIcon from "@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import BarsIcon from "@patternfly/react-icons/dist/js/icons/bars-icon";
+import ExternalLinkAltIcon from "@patternfly/react-icons/dist/js/icons/external-link-alt-icon";
 
 import { isAuthRequired } from "@app/Constants";
 import useBranding from "@app/hooks/useBranding";
@@ -38,39 +39,42 @@ import { AboutApp } from "./about";
 
 export const HeaderApp: React.FC = () => {
   const {
-    masthead: { leftBrand, leftTitle, rightBrand },
+    masthead: { leftBrand, leftTitle, rightBrand, supportUrl },
   } = useBranding();
 
   const auth = (isAuthRequired && useAuth()) || undefined;
 
   const navigate = useNavigate();
 
-  const [isAboutOpen, toggleIsAboutOpen] = useReducer((state) => !state, false);
+  const [isAboutModalOpen, toggleIsAboutModalOpen] = useReducer(
+    (state) => !state,
+    false,
+  );
+  const [isHelpDropdownOpen, setIsHelpDropdownOpen] = useState(false);
   const [isKebabDropdownOpen, setIsKebabDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+
+  const onHelpDropdownToggle = () => {
+    setIsHelpDropdownOpen(!isHelpDropdownOpen);
+  };
 
   const onKebabDropdownToggle = () => {
     setIsKebabDropdownOpen(!isKebabDropdownOpen);
   };
 
-  const onKebabDropdownSelect = () => {
-    setIsKebabDropdownOpen(!isKebabDropdownOpen);
-  };
-
   const logout = () => {
-    auth &&
-      auth
-        .signoutRedirect()
-        .then(() => {})
-        .catch((err) => {
-          console.error("Logout failed:", err);
-          navigate("/");
-        });
+    auth
+      ?.signoutRedirect()
+      .then(() => {})
+      .catch((err) => {
+        console.error("Logout failed:", err);
+        navigate("/");
+      });
   };
 
   return (
     <>
-      <AboutApp isOpen={isAboutOpen} onClose={toggleIsAboutOpen} />
+      <AboutApp isOpen={isAboutModalOpen} onClose={toggleIsAboutModalOpen} />
 
       <Masthead>
         <MastheadToggle>
@@ -106,7 +110,7 @@ export const HeaderApp: React.FC = () => {
                 id="header-toolbar-tasks"
                 variant="icon-button-group"
                 align={{ default: "alignRight" }}
-              ></ToolbarGroup>
+              />
 
               {/* toolbar items to show at desktop sizes */}
               <ToolbarGroup
@@ -122,14 +126,48 @@ export const HeaderApp: React.FC = () => {
                 }}
               >
                 <ToolbarItem>
-                  <Button
-                    id="about-button"
-                    aria-label="about button"
-                    variant={ButtonVariant.plain}
-                    onClick={toggleIsAboutOpen}
+                  <Dropdown
+                    isOpen={isHelpDropdownOpen}
+                    onSelect={onHelpDropdownToggle}
+                    onOpenChange={(isOpen: boolean) =>
+                      setIsHelpDropdownOpen(isOpen)
+                    }
+                    popperProps={{ position: "right" }}
+                    toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                      <MenuToggle
+                        ref={toggleRef}
+                        onClick={onHelpDropdownToggle}
+                        isExpanded={isHelpDropdownOpen}
+                        variant="plain"
+                        aria-label="About"
+                      >
+                        <HelpIcon />
+                      </MenuToggle>
+                    )}
                   >
-                    <HelpIcon />
-                  </Button>
+                    <DropdownList>
+                      {supportUrl && (
+                        <DropdownItem
+                          key="support"
+                          component="a"
+                          to={supportUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Support{" "}
+                          <Icon isInline iconSize="sm">
+                            <ExternalLinkAltIcon />
+                          </Icon>
+                        </DropdownItem>
+                      )}
+                      <DropdownItem
+                        key="about"
+                        onClick={toggleIsAboutModalOpen}
+                      >
+                        About
+                      </DropdownItem>
+                    </DropdownList>
+                  </Dropdown>
                 </ToolbarItem>
               </ToolbarGroup>
 
@@ -143,7 +181,7 @@ export const HeaderApp: React.FC = () => {
                 <ToolbarItem>
                   <Dropdown
                     isOpen={isKebabDropdownOpen}
-                    onSelect={onKebabDropdownSelect}
+                    onSelect={onKebabDropdownToggle}
                     onOpenChange={(isOpen: boolean) =>
                       setIsKebabDropdownOpen(isOpen)
                     }
@@ -156,7 +194,7 @@ export const HeaderApp: React.FC = () => {
                         variant="plain"
                         aria-label="About"
                       >
-                        <EllipsisVIcon aria-hidden="true" />
+                        <EllipsisVIcon />
                       </MenuToggle>
                     )}
                   >
@@ -167,8 +205,25 @@ export const HeaderApp: React.FC = () => {
                         </DropdownItem>
                       )}
                       <Divider key="separator" component="li" />
-                      <DropdownItem key="about" onClick={toggleIsAboutOpen}>
-                        <HelpIcon /> About
+                      {supportUrl && (
+                        <DropdownItem
+                          key="support"
+                          component="a"
+                          to={supportUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Support{" "}
+                          <Icon isInline iconSize="sm">
+                            <ExternalLinkAltIcon />
+                          </Icon>
+                        </DropdownItem>
+                      )}
+                      <DropdownItem
+                        key="about"
+                        onClick={toggleIsAboutModalOpen}
+                      >
+                        About
                       </DropdownItem>
                     </DropdownList>
                   </Dropdown>
