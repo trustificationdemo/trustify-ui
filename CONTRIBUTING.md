@@ -1,3 +1,4 @@
+test
 # Contributing to Trustify UI
 
 Thank you for considering contributing to Trustify UI! We appreciate your time and effort in improving the project. Please follow these guidelines to make the contribution process smooth and effective.
