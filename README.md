@@ -4,6 +4,42 @@
 
 Trustify UI Component
 
+## Hello World
+
+Get the Trustify UI running locally in a few steps.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org) >= 22 (use [nvm](https://nodejs.org/en/download) to install)
+- npm (included with Node.js)
+- _(Optional)_ A running [Trustify backend](https://github.com/guacsec/trustify) for full API functionality
+
+### Quick Start
+
+```bash
+git clone https://github.com/guacsec/trustify-ui.git
+cd trustify-ui
+npm ci
+npm run start:dev
+```
+
+Open your browser at [http://localhost:3000](http://localhost:3000). You'll see the Trustify UI where you can browse SBOMs, advisories, and vulnerabilities.
+
+### Connecting to a Backend
+
+Without a running backend, the UI will start but API calls will fail. To enable full functionality, start the [Trustify backend](https://github.com/guacsec/trustify) on the default port:
+
+```bash
+# In the trustify repo
+cargo run --bin trustd
+```
+
+The UI dev server automatically proxies API requests to `http://localhost:8080`. To use a different backend URL, set the `TRUSTIFY_API_URL` environment variable:
+
+```bash
+TRUSTIFY_API_URL=http://my-backend:8080 npm run start:dev
+```
+
 # Build and Test Status
 
 | branch | last merge CI | last merge image build | nightly CI |
